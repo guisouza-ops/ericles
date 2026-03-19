@@ -1,96 +1,124 @@
 import React, { useState } from 'react';
-import { Text, View, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View , Text, TextInput, StyleSheet, Button } from 'react-native';
 
 export default function App() {
-  const [text, setText] = useState('');
 
-  // Função para salvar os dados
-  const saveData = async () => {
-    try {
-      await AsyncStorage.setItem('@meu_dado', text);
-      Alert.alert('Sucesso', 'Informações salvas com sucesso!');
-    } catch (e) {
-      Alert.alert('Erro', 'Falha ao salvar os dados.');
+  const [login, setLogin] = useState('');
+  const [senha, setSenha] = useState('');
+  const [mensagem, setMensagem] = useState('');
+  const [tela, setTela] = useState('');
+  
+  const [alunos, setAlunos] = useState([]);
+  const[nome, setNome] = useState('');
+  const[idade, setIdade] = useState('');
+  const[curso, setCurso] = useState('');
+
+  function validarLogin() {
+    setMensagem('');
+    if (login === 'admin' && senha === '123') {
+
+      setTela('mudar');
+    } else {
+      setMensagem('Login ou senha incorretos!');
     }
+  }
+
+  function voltarTela(){
+    setTela('');
+    setLogin('');
+    setSenha('');
+    setMensagem('')
+  }
+
+  function cadastrarAluno() {
+  const novoAluno = {
+    nome,
+    idade,
+    curso
   };
+
+setAlunos([...alunos, novoAluno]);
+
+setNome('');
+setIdade('');
+setCurso('');
+}
+
+  if (tela === 'mudar') {
+    return(
+    <View style={styles.container}>
+    <Text style={styles.titulo}>Cadastro de alunos</Text>
+    <Text>Nome do aluno:</Text>
+    <TextInput style={styles.input} onChangeText={setNome} placeholder='Digite o nome do aluno' value={nome}/>
+    <Text>Idade do aluno:</Text>
+    <TextInput style={styles.input} onChangeText={setIdade} placeholder='Digite a idade do aluno' value={idade} keyboardType="numeric"/>
+    <Text>curso do aluno:</Text>
+    <TextInput style={styles.input} onChangeText={setCurso} placeholder='Digite o curso do aluno' value={curso}/>
+    <Button title="Cadastrar aluno" style={styles.botao} onPress={cadastrarAluno} />
+    <br/>
+    {alunos.map((aluno, index) => (
+      <View key={index}>
+        <Text>Nome: {aluno.nome}</Text>
+        <Text>Idade: {aluno.idade}</Text>
+        <Text>Curso: {aluno.curso}</Text>
+        <Text>----------</Text>
+      </View>
+    )
+    )}
+
+    <Button title="Voltar" style={styles.botao} onPress={voltarTela} />
+    </View>
+  );
+
+  }
+
+
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>LOGIN:</Text>
-      
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        onChangeText={setText}
-        value={text}/>
+      <Text style={styles.titulo}>Tela de Login</Text>
 
-<TextInput
-        style={styles.input}
-        placeholder="Senha"
-        onChangeText={setText}
-        value={text}/>
+      <Text>Login:</Text>
+      <TextInput style={styles.input} placeholder="Digite seu nome" onChangeText={setLogin}/>
 
+      <Text>Senha:</Text>
+      <TextInput style={styles.input} placeholder="Digite sua senha" onChangeText={setSenha}/>
 
-      <TouchableOpacity style={styles.button} onPress={saveData}>
-        <Text style={styles.buttonText}>Entrar</Text>
-      </TouchableOpacity>
+      <Button title="Entrar" style={styles.botao} onPress={validarLogin} />
 
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>Back to the old house</Text>
-      </View>
+      <Text>{mensagem}</Text>
 
     </View>
   );
+
 }
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: "center",
+    backgroundColor: "#383838",
     flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-    backgroundColor: '#191970',
-  },
-  label: {
-    fontSize: 18,
-    marginBottom: 10,
-    fontWeight: 'bold',
-    color: '#ffff'
-  },
-  input: {
-    backgroundColor: '#fff',
-    padding: 15,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    marginBottom: 20,
-  },
-  button: {
-    backgroundColor: '#007AFF',
-    padding: 18,
-    borderRadius: 10,
-    alignItems: 'center',
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
+    justifyContent: "center",
   },
 
-  footer: {
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-    backgroundColor: "rgba(10, 10, 10, 0.5)",
-    paddingVertical: 15,
-    alignItems: 'center'
+  titulo:{
+    fontSize: 25,
+    color: "#FFFFFF",
   },
-  footerText: {
-    color: '#fff',
-    fontSize: 14
+
+  input: {
+    textAlign: "center",
+    borderWidth: 1,
+    borderRadius: 8,
+    color: "#000000",
+    backgroundColor: "#FFFFFF",
+    marginBottom: 8,
+    padding:5,
+  },
+
+  botao: {
+    margin: 10,
+    padding: 10,
   }
+
 });
