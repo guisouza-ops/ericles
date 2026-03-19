@@ -1,0 +1,126 @@
+import React, { useState } from 'react';
+import { View , Text, TextInput, StyleSheet, Button } from 'react-native';
+
+export default function App() {
+
+  const [login, setLogin] = useState('');
+  const [senha, setSenha] = useState('');
+  const [mensagem, setMensagem] = useState('');
+  const [tela, setTela] = useState('');
+  
+  const [alunos, setAlunos] = useState([]);
+  const[nome, setNome] = useState('');
+  const[idade, setIdade] = useState('');
+  const[curso, setCurso] = useState('');
+
+  function validarLogin() {
+    setMensagem('');
+    if (login === 'admin' && senha === '123') {
+
+      setTela('mudar');
+    } else {
+      setMensagem('Login ou senha incorretos!');
+    }
+  }
+
+  function voltarTela(){
+    setTela('');
+    setLogin('');
+    setSenha('');
+    setMensagem('')
+  }
+
+  function cadastrarAluno() {
+  const novoAluno = {
+    nome,
+    idade,
+    curso
+  };
+
+setAlunos([...alunos, novoAluno]);
+
+setNome('');
+setIdade('');
+setCurso('');
+}
+
+  if (tela === 'mudar') {
+    return(
+    <View style={styles.container}>
+    <Text style={styles.titulo}>Cadastro de produtos</Text>
+    <Text style={{ color: 'white' }}>Nome do produto:</Text>
+    <TextInput style={styles.input} onChangeText={setNome} placeholder='Digite o nome do produto' value={nome}/>
+    <Text style={{ color: 'white' }}>Preço:</Text>
+    <TextInput style={styles.input} onChangeText={setIdade} placeholder='Digite o preço' value={idade} keyboardType="numeric"/>
+    <Text style={{ color: 'white' }}>Descrição:</Text>
+    <TextInput style={styles.input} onChangeText={setCurso} placeholder='Digite a descrição' value={curso}/>
+    <Button title="Cadastrar produto" style={styles.botao} onPress={cadastrarAluno} />
+    <br/>
+    {alunos.map((aluno, index) => (
+      <View key={index}>
+        <Text>Nome: {aluno.nome}</Text>
+        <Text>Idade: {aluno.idade}</Text>
+        <Text>Curso: {aluno.curso}</Text>
+        <Text>----------</Text>
+      </View>
+    )
+    )}
+
+    <Button title="Voltar" style={styles.botao} onPress={voltarTela} />
+    </View>
+  );
+
+  }
+
+  return (
+    <View style={styles.container}>
+      <Text style={{ color: '#BA3F3F', fontSize: 35 }}>Delivery da massa</Text>
+      <Text style={styles.titulo}>Tela de Login</Text>
+
+      <Text style={{ color: 'white' }}>Login:</Text>
+      <TextInput style={styles.input} placeholder="Digite seu nome" onChangeText={setLogin}/>
+
+      <Text style={{ color: 'white' }}>Senha:</Text>
+      <TextInput style={styles.input} placeholder="Digite sua senha" onChangeText={setSenha}/>
+
+      <Button title="Entrar" style={styles.botao} onPress={validarLogin} />
+
+      <Text>{mensagem}</Text>
+
+    </View>
+  );
+
+}
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: "center",
+    backgroundColor: "#383838",
+    flex: 1,
+    justifyContent: "center",
+  },
+
+  titulo:{
+    fontSize: 25,
+    color: "#FFFFFF",
+  },
+
+  input: {
+    textAlign: "center",
+    borderWidth: 1,
+    borderRadius: 8,
+    color: "#000000",
+    backgroundColor: "#FFFFFF",
+    marginBottom: 8,
+    padding:5,
+  },
+
+  botao: {
+    margin: 10,
+    padding: 10,
+  },
+
+
+
+});
+
